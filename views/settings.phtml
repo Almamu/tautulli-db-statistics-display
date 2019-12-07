@@ -1,0 +1,106 @@
+<?php $startblock ('content') ?>
+    <div class="py-5 text-center">
+        <h2>Configuration</h2>
+        <p class="lead">
+            Before you can use the generator some configuration is required. Please fill the following form
+            with the required information.
+        </p>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <?php if (isset ($errors) === true): ?>
+                <p class="alert alert-danger">
+                    <?php foreach ($errors as $error): ?>
+                    <?= $error ?><br />
+                    <?php endforeach ?>
+                </p>
+            <?php endif ?>
+
+            <form method="POST" action="<?= $url ('/') ?>" class="needs-validation">
+                <div class="row mb-3">
+                    <div class="col-12 form-group">
+                        <label for="firstName">Mode</label>
+                        <select class="custom-select" id="mode" name="mode" required>
+                            <option disabled <?= $config ['mode'] ?? 'selected' ?>>Please select an option</option>
+                            <option value="api" <?= (($config ['mode'] ?? '') == 'api' ? 'selected' : '') ?>>API mode</option>
+                            <option value="sqlite" <?= (($config ['mode'] ?? '') == 'sqlite' ? 'selected' : '') ?>>SQLite mode</option>
+                        </select>
+                        <div class="invalid-feedback">
+                            Please select a connection mode
+                        </div>
+                        <p>
+                            This setting specifies the way the application will connect with Tautulli to gather
+                            all the required information for this application to properly work.
+                            <ul>
+                                <li>SQL mode:</li>
+                                Requires that the application is run from the same server as where Tautulli is
+                                installed. This will make use of the /opt/Tautulli/tautulli.db file.
+                                <li>API mode:</li>
+                                Can be run from anywhere, but requires the Tautulli API to be accessible from
+                                wherever the application is installed. All the connections are done from the PHP side
+                                so no authentication data will be revealed by the application
+                            </ul>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="row mb-3 collapse <?= (($config ['mode'] ?? '') == 'api' ? 'show' : '') ?>" id="api">
+                    <div class="col-md-6 form-group">
+                        <label for="url">Tautulli Base URL</label>
+                        <input class="form-control" type="text" name="url" id="url" value="<?= htmlentities ($config ['url'] ?? '') ?>">
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label for="api">Tautulli API Key</label>
+                        <input class="form-control" type="text" name="key" id="key" value="<?= htmlentities ($config ['key'] ?? '') ?>">
+                    </div>
+                </div>
+
+                <div class="row mb-3 collapse <?= (($config ['mode'] ?? '') == 'sqlite' ? 'show' : '') ?>" id="sqlite">
+                    <div class="col-12">
+                        <label for="path">Tautulli Database Path</label>
+                        <input class="form-control" type="text" name="path" id="path">
+                    </div>
+                </div>
+
+                <h4>Public access</h4>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="publicurl">Application's public URL</label>
+                        <input class="form-control" type="text" name="publicurl" id="publicurl" value="<?= htmlentities ($config ['publicurl'] ?? '') ?>">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="basepath">Application's base path</label>
+                        <input class="form-control" type="text" name="basepath" id="basepath" value="<?= htmlentities ($config ['basepath'] ?? $basepath) ?>">
+                    </div>
+                </div>
+
+                <hr class="mb-4">
+                <button class="btn btn-primary btn-lg btn-block" type="submit">Save settings</button>
+            </form>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        $ ('#mode').change (function ()
+        {
+            let value = $ (this).val ();
+
+            if (value === 'api')
+            {
+                $ ('#sqlite').collapse ('hide');
+                $ ('#api').collapse ('show');
+            }
+            else if (value === 'sqlite')
+            {
+                $ ('#api').collapse ('hide');
+                $ ('#sqlite').collapse ('show');
+            }
+        });
+
+        // set the urls from the automatic detection
+        $ ('#publicurl').val (window.location);
+    </script>
+<?php $endblock () ?>
+
+<?php $render ('template/base') ?>

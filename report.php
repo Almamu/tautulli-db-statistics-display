@@ -1,4 +1,4 @@
-<?php declare (strict_types=1);
+<?php
 
     const USER_ID = 7631950;
     const MINIMUM_DATE = 1546300800;

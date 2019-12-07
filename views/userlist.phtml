@@ -1,0 +1,23 @@
+<?php $startblock ('content') ?>
+<table class="table table-hover table-striped">
+    <tr>
+        <th class="header-small"></th>
+        <th>Username</th>
+        <th class="header-small"></th>
+    </tr>
+    <?php foreach ($users as $user):
+        /** @var \Almamu\Data\User $user */ ?>
+        <tr>
+            <td class="header-small"><img class="user-avatar-small rounded-circle" src="<?= $user->getThumbnail () ?>" /></td>
+            <td><?= $user->getUsername () ?></td>
+            <td class="header-small">
+                <a href="<?= $action ('generate', array ('userId' => $user->getUserId ())) ?>" class="btn btn-primary">
+                    Generate
+                </a>
+            </td>
+        </tr>
+    <?php endforeach ?>
+</table>
+<?php $endblock () ?>
+
+<?php $render ('template/base') ?>
