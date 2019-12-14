@@ -107,7 +107,7 @@
 
                 if (file_exists ($configPath) === false)
                 {
-                    mkdir ($configPath, 640);
+                    mkdir ($configPath, 750);
                 }
 
                 if (is_dir ($configPath) === false)
